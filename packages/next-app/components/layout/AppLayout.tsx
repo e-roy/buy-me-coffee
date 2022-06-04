@@ -13,7 +13,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   const router = useRouter();
   return (
     <div className="h-screen flex flex-col bg-coffee-400">
-      <header className="p-2 flex justify-between sticky top-0">
+      <header className="p-2 md:px-6 flex justify-between sticky top-0">
         <div className="cursor-pointer" onClick={() => router.push("/")}>
           <Image src={logo} width={50} height={50} />
         </div>

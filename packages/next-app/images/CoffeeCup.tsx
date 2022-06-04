@@ -1,4 +1,8 @@
-export const CoffeeCup = () => {
+interface CoffeeCupProps {
+  size?: string;
+}
+
+export const CoffeeCup = ({ size = "32px" }: CoffeeCupProps) => {
   return (
     <svg
       version="1.1"
@@ -7,10 +11,13 @@ export const CoffeeCup = () => {
       xmlnsXlink="http://www.w3.org/1999/xlink"
       x="0px"
       y="0px"
-      width="32px"
-      height="32px"
+      width={size}
+      height={size}
       viewBox="0 0 549.818 549.819"
       xmlSpace="preserve"
+      fill="currentColor"
+      strokeWidth={10}
+      stroke="currentColor"
     >
       <g>
         <path

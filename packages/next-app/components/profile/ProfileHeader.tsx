@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useContract, useSigner } from "wagmi";
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
-import { ethers } from "ethers";
+// import { ethers } from "ethers";
 
 import { Avatar } from "@/components/elements/Avatar";
 
@@ -13,7 +13,7 @@ interface ProfileHeaderProps {
 export const ProfileHeader = ({ handle }: ProfileHeaderProps) => {
   const chainId = Number(NETWORK_ID);
   const { data: signerData } = useSigner();
-  const [userBalance, setUserBalance] = useState("0");
+  // const [userBalance, setUserBalance] = useState("0");
 
   const allContracts = contracts as any;
   const coffeeAddress = allContracts[chainId][0].contracts.BuyMeCoffee.address;
@@ -25,23 +25,23 @@ export const ProfileHeader = ({ handle }: ProfileHeaderProps) => {
     signerOrProvider: signerData || undefined,
   });
 
-  console.log("coffeeContract", coffeeContract);
+  // console.log("coffeeContract", coffeeContract);
   useEffect(() => {
     if (signerData) {
       console.log("coffeeContract", coffeeContract);
-      const fetchData = async () => {
-        const balance = await coffeeContract.checkBalance();
-        // convert back to ether
-        const balanceInEther = ethers.utils.formatEther(balance);
-        console.log("balanceInEther", balanceInEther);
-        setUserBalance(balanceInEther);
-      };
-      fetchData();
+      // const fetchData = async () => {
+      //   const balance = await coffeeContract.checkBalance();
+      //   // convert back to ether
+      //   const balanceInEther = ethers.utils.formatEther(balance);
+      //   console.log("balanceInEther", balanceInEther);
+      //   setUserBalance(balanceInEther);
+      // };
+      // fetchData();
     }
   }, [signerData]);
 
   return (
-    <div className="w-full bg-coffee-50 flex justify-center items-center">
+    <div className="w-full flex justify-center items-center">
       <div className=" absolute flex justify-center items-center">
         <img
           className="object-cover h-20 w-20 rounded-full"
@@ -50,18 +50,18 @@ export const ProfileHeader = ({ handle }: ProfileHeaderProps) => {
         />
       </div>
 
-      <div className="h-56 bg-blue-400 rounded-3xl shadow-md w-full">
+      <div className="h-56 bg-coffee-800 rounded-3xl shadow-md w-full">
         <div className="h-1/2 w-full flex justify-between items-baseline px-3"></div>
 
-        <div className="bg-coffee-100 shadow-lg shadow-coffee-700 h-1/2 w-full rounded-3xl flex flex-col pt-6">
+        <div className="bg-coffee-50 text-coffee-900 font-medium shadow-lg shadow-coffee-700 h-1/2 w-full rounded-3xl flex flex-col pt-6">
           <div className="w-full flex justify-between px-6">
             <div className="flex flex-col justify-center">
-              <h1 className="text-gray-700 font-bold">{handle}</h1>
-              <h1 className="text-gray-500 text-sm">location:</h1>
+              <h1 className="font-bold">{handle}</h1>
+              <h1 className="text-sm">location:</h1>
             </div>
             <div className="flex flex-col justify-center items-center">
-              <h1 className="text-gray-500 text-xs">Balance</h1>
-              <h1 className="text-gray-600 text-sm">{userBalance}</h1>
+              {/* <h1 className="text-xs">Balance</h1>
+              <h1 className="text-sm">{userBalance}</h1> */}
             </div>
           </div>
         </div>

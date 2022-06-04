@@ -5,16 +5,23 @@ import { ethers } from "ethers";
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
 
-import { UserInfo } from "@/components/coffee";
+import { UserInfo, MotionHeader } from "@/components/coffee";
+import { Button } from "@/components/elements";
+
+import { TruckIcon, ExclamationCircleIcon } from "@heroicons/react/outline";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export const BuyCoffee = () => {
+interface BuyCoffeeProps {
+  onComplete: () => void;
+}
+
+export const BuyCoffee = ({ onComplete }: BuyCoffeeProps) => {
   const chainId = Number(NETWORK_ID);
   const [name, setName] = useState("");
-  const [message, setMessage] = useState("have a coffee on me ");
+  const [message, setMessage] = useState("have a coffee on me");
   const [amount, setAmount] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -47,6 +54,7 @@ export const BuyCoffee = () => {
         setMessage("");
         setAmount(0);
         setLoading(false);
+        onComplete();
       });
     } catch (error) {
       setError("txn failed, check contract");
@@ -56,18 +64,32 @@ export const BuyCoffee = () => {
 
   if (loading)
     return (
-      <div className="m-auto py-16 p-4 flex justify-center">
-        <div className="text-2xl font-medium font-gray-700">
-          shipping coffee...
+      <MotionHeader>
+        <div className="m-auto mt-16 p-4">
+          <div className="flex justify-center text-coffee-900 py-8">
+            <TruckIcon className="w-32 h-32" />
+          </div>
+          <div className="text-4xl font-bold text-center text-coffee-900">
+            shipping coffee...
+          </div>
+          <div></div>
         </div>
-      </div>
+      </MotionHeader>
     );
 
   if (error)
     return (
-      <div className="m-auto py-16 p-4 flex justify-center">
-        <div className="text-2xl font-medium font-gray-700"> {error}</div>
-      </div>
+      <MotionHeader>
+        <div className="m-auto mt-16 p-4">
+          <div className="flex justify-center text-coffee-900 py-8">
+            <ExclamationCircleIcon className="w-32 h-32" />
+          </div>
+          <div className="text-4xl font-bold text-center text-coffee-900">
+            {error}
+          </div>
+          <div></div>
+        </div>
+      </MotionHeader>
     );
 
   return (
@@ -79,9 +101,9 @@ export const BuyCoffee = () => {
             onClick={() => setAmount(1)}
             className={classNames(
               amount === 1
-                ? "bg-coffee-900 text-coffee-100 font-bold"
+                ? "bg-coffee-900 text-coffee-50 font-bold"
                 : "bg-coffee-700 font-medium  hover:border-coffee-900",
-              "w-32 rounded-full px-4 py-2 border-2 border-coffee-200 text-coffee-200"
+              "w-32 rounded-full px-4 py-2 border-2 border-coffee-200 text-coffee-200 hover:text-coffee-50"
             )}
           >
             <p>☕</p>
@@ -91,9 +113,9 @@ export const BuyCoffee = () => {
             onClick={() => setAmount(5)}
             className={classNames(
               amount === 5
-                ? "bg-coffee-900 text-coffee-100 font-bold"
+                ? "bg-coffee-900 text-coffee-50 font-bold"
                 : "bg-coffee-700 font-medium  hover:border-coffee-900",
-              "w-32 rounded-full px-4 py-2 border-2 border-coffee-200 text-coffee-200"
+              "w-32 rounded-full px-4 py-2 border-2 border-coffee-200 text-coffee-200 hover:text-coffee-50"
             )}
           >
             <p>☕☕</p>
@@ -103,9 +125,9 @@ export const BuyCoffee = () => {
             onClick={() => setAmount(10)}
             className={classNames(
               amount === 10
-                ? "bg-coffee-900 text-coffee-100 font-bold"
+                ? "bg-coffee-900 text-coffee-50 font-bold"
                 : "bg-coffee-700 font-medium  hover:border-coffee-900",
-              "w-32 rounded-full px-4 py-2 border-2 border-coffee-200 text-coffee-200"
+              "w-32 rounded-full px-4 py-2 border-2 border-coffee-200 text-coffee-200 hover:text-coffee-50"
             )}
           >
             <p>☕☕☕</p>
@@ -122,16 +144,11 @@ export const BuyCoffee = () => {
             required
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="border p-2 my-2 rounded-lg w-full resize-none border-coffee-900 shadow-lg shadow-coffee-700"
+            className="border-2 p-2 my-2 rounded-lg w-full resize-none border-coffee-400 shadow-lg shadow-coffee-700 font-medium text-coffee-900 outline-none focus:border-coffee-700"
           />
         </div>
-        <div className="flex justify-end">
-          <button
-            className="w-32 rounded-full px-4 py-2 text-gray-300 bg-coffee-800 hover:bg-coffee-900 border-2 border-coffee-200 hover:border-coffee-900"
-            type="submit"
-          >
-            submit
-          </button>
+        <div className="flex justify-end px-4">
+          <Button type="submit">submit</Button>
         </div>
       </form>
     </div>
