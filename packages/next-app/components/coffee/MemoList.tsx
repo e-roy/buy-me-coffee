@@ -4,6 +4,8 @@ import { useContract, useSigner } from "wagmi";
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
 
+import { UserInfo } from "@/components/coffee";
+
 export const MemoList = () => {
   const chainId = Number(NETWORK_ID);
   const { data: signerData } = useSigner();
@@ -23,7 +25,7 @@ export const MemoList = () => {
     if (signerData) {
       const fetchData = async () => {
         const memos = await coffeeContract.getMemos();
-        // console.log("memos", memos);
+        console.log("memos", memos);
         setMemos(memos);
       };
       fetchData();
@@ -33,11 +35,13 @@ export const MemoList = () => {
   if (memos.length === 0) return null;
 
   return (
-    <div className="border-2 p-4 rounded-lg shadow-lg max-w-2xl m-auto">
+    <div className="p-2">
       {memos.map((memo: any, index: number) => (
-        <div className="border p-2 rounded-lg shadow-lg" key={index}>
-          <div>name : {memo.name}</div>
-          <div>message : {memo.message}</div>
+        <div
+          className="border my-2 p-2 rounded-lg bg-coffee-50 border-coffee-900 shadow-lg shadow-coffee-700"
+          key={index}
+        >
+          <UserInfo name={memo.from} message={memo.message} />
         </div>
       ))}
     </div>
