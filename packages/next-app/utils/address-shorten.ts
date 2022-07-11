@@ -1,4 +1,5 @@
 export const addressShorten = (address: string) => {
+  if (!address) return null;
   if (
     address.includes(".eth") ||
     address === "" ||

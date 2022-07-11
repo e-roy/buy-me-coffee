@@ -1,5 +1,5 @@
 {
-  "name": "@project/next-app-ts",
+  "name": "@create-web3/frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,25 +9,27 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@rainbow-me/rainbowkit": "^0.2.2",
-    "ethers": "^5.6.8",
+    "@rainbow-me/rainbowkit": "^0.4.2",
+    "ethers": "^5.6.9",
     "framer-motion": "^6.3.10",
+    "lodash.merge": "^4.6.2",
     "next": "12.1.6",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
-    "wagmi": "^0.4.6"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "wagmi": "^0.5.9"
   },
   "devDependencies": {
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
-    "@types/node": "^17.0.35",
-    "@types/react": "18.0.9",
-    "@types/react-dom": "18.0.3",
+    "@types/lodash.merge": "^4.6.7",
+    "@types/node": "^17.0.39",
+    "@types/react": "^18.0.11",
+    "@types/react-dom": "^18.0.5",
     "autoprefixer": "^10.4.7",
-    "eslint": "^8.16.0",
+    "eslint": "^8.17.0",
     "eslint-config-next": "^12.1.6",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.0.24",
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.3"
   }
 }

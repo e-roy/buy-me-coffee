@@ -17,11 +17,11 @@ const cardVariants: Variants = {
   },
 };
 
-interface MotionCardProps {
+interface MotionSlideDownProps {
   children: React.ReactNode;
 }
 
-export const MotionCard = ({ children }: MotionCardProps) => {
+export const MotionSlideDown = ({ children }: MotionSlideDownProps) => {
   return (
     <motion.div
       className=""

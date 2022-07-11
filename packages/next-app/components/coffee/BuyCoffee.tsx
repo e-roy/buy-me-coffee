@@ -1,11 +1,13 @@
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useContext } from "react";
+import { UserContext } from "@/components/layout";
 import { useContract, useSigner, useAccount } from "wagmi";
 import { ethers } from "ethers";
 
 import contracts from "@/contracts/hardhat_contracts.json";
 import { NETWORK_ID } from "@/config";
 
-import { UserInfo, MotionHeader } from "@/components/coffee";
+import { UserInfo } from "@/components/coffee";
+import { MotionFadeIn } from "@/components/motion";
 import { Button } from "@/components/elements";
 
 import { TruckIcon, ExclamationCircleIcon } from "@heroicons/react/outline";
@@ -15,10 +17,13 @@ function classNames(...classes: string[]) {
 }
 
 interface BuyCoffeeProps {
+  contractAddress: string;
   onComplete: () => void;
 }
 
-export const BuyCoffee = ({ onComplete }: BuyCoffeeProps) => {
+export const BuyCoffee = ({ contractAddress, onComplete }: BuyCoffeeProps) => {
+  const { currentUser } = useContext(UserContext);
+  // console.log("currentUser", currentUser);
   const chainId = Number(NETWORK_ID);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("have a coffee on me");
@@ -30,27 +35,30 @@ export const BuyCoffee = ({ onComplete }: BuyCoffeeProps) => {
   const { data: accountData } = useAccount();
 
   const allContracts = contracts as any;
-  const coffeeAddress = allContracts[chainId][0].contracts.BuyMeCoffee.address;
   const coffeeABI = allContracts[chainId][0].contracts.BuyMeCoffee.abi;
 
   const coffeeContract = useContract({
-    addressOrName: coffeeAddress,
+    addressOrName: contractAddress,
     contractInterface: coffeeABI,
-    signerOrProvider: signerData || undefined,
+    signerOrProvider: signerData,
   });
+
+  useEffect(() => {
+    if (currentUser?.name) {
+      setName(currentUser.name);
+    } else {
+      setName(accountData?.address as string);
+    }
+  }, [currentUser]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const tx = await coffeeContract.buyCoffee(
-        name ? accountData?.address : "anon",
-        message,
-        { value: ethers.utils.parseEther(amount.toString()) }
-      );
+      const tx = await coffeeContract.buyCoffee(name, message, {
+        value: ethers.utils.parseEther(amount.toString()),
+      });
       tx.wait(1).then(() => {
-        console.log("tx complete");
-        setName("");
         setMessage("");
         setAmount(0);
         setLoading(false);
@@ -64,37 +72,36 @@ export const BuyCoffee = ({ onComplete }: BuyCoffeeProps) => {
 
   if (loading)
     return (
-      <MotionHeader>
+      <MotionFadeIn>
         <div className="m-auto mt-16 p-4">
-          <div className="flex justify-center text-coffee-900 py-8">
+          <div className="flex justify-center text-coffee-800 py-8">
             <TruckIcon className="w-32 h-32" />
           </div>
-          <div className="text-4xl font-bold text-center text-coffee-900">
+          <div className="text-4xl font-bold text-center text-coffee-800">
             shipping coffee...
           </div>
           <div></div>
         </div>
-      </MotionHeader>
+      </MotionFadeIn>
     );
 
   if (error)
     return (
-      <MotionHeader>
+      <MotionFadeIn>
         <div className="m-auto mt-16 p-4">
-          <div className="flex justify-center text-coffee-900 py-8">
+          <div className="flex justify-center text-coffee-800 py-8">
             <ExclamationCircleIcon className="w-32 h-32" />
           </div>
-          <div className="text-4xl font-bold text-center text-coffee-900">
+          <div className="text-4xl font-bold text-center text-coffee-800">
             {error}
           </div>
           <div></div>
         </div>
-      </MotionHeader>
+      </MotionFadeIn>
     );
 
   return (
     <div className="m-auto mt-2 p-4">
-      <UserInfo name={accountData?.address || "anon"} />
       <div className="mx-4">
         <div className="flex w-full pt-2 space-x-2 justify-between">
           <button
@@ -135,9 +142,16 @@ export const BuyCoffee = ({ onComplete }: BuyCoffeeProps) => {
           </button>
         </div>
       </div>
+      <UserInfo
+        name={currentUser?.name || (accountData?.address as string)}
+        avatar={currentUser?.avatar}
+        address={currentUser?.address}
+      />
       <form className="my-4" onSubmit={(e) => handleSubmit(e)}>
         <div>
-          <label className="p-2 font-medium text-gray-800">Message</label>
+          <label className="p-2 font-medium text-gray-800">
+            leave a nice message {currentUser?.name}
+          </label>
           <textarea
             placeholder="message"
             rows={5}

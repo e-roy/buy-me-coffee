@@ -1,5 +1,5 @@
 {
-  "name": "@project/hardhat-ts",
+  "name": "@create-web3/backend",
   "version": "1.0.0",
   "description": "mono repo with hardhat and next",
   "private": true,

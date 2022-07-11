@@ -17,11 +17,11 @@ const cardVariants: Variants = {
   },
 };
 
-interface MotionHeaderProps {
+interface MotionFadeInProps {
   children: React.ReactNode;
 }
 
-export const MotionHeader = ({ children }: MotionHeaderProps) => {
+export const MotionFadeIn = ({ children }: MotionFadeInProps) => {
   return (
     <motion.div
       className=""

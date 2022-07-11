@@ -5,13 +5,13 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "dev": "yarn workspace @project/next-app-ts dev",
-    "build": "yarn workspace @project/next-app-ts build",
-    "test": "yarn workspace @project/next-app-ts start",
-    "chain": "yarn workspace @project/hardhat-ts chain",
-    "clean": "yarn workspace @project/hardhat-ts clean",
-    "deploy": "yarn workspace @project/hardhat-ts deploy",
-    "compile": "yarn workspace @project/hardhat-ts compile"
+    "dev": "yarn workspace @create-web3/frontend dev",
+    "build": "yarn workspace @create-web3/frontend build",
+    "test": "yarn workspace @create-web3/frontend start",
+    "chain": "yarn workspace @create-web3/backend chain",
+    "clean": "yarn workspace @create-web3/backend clean",
+    "deploy": "yarn workspace @create-web3/backend deploy",
+    "compile": "yarn workspace @create-web3/backend compile"
   },
   "author": "",
   "workspaces": {

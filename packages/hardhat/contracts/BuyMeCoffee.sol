@@ -1,9 +1,13 @@
-//SPDX-License-Identifier: Unlicense
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract BuyMeCoffee {
+error Unauthorized();
+error InvalidAmount();
+error InvaildCall();
+
+contract BuyMeCoffee is Ownable {
     // Event to emit when a Memo is created.
     event NewMemo(
         address indexed from,
@@ -22,15 +26,19 @@ contract BuyMeCoffee {
 
     // Address of contract deployer. Marked payable so that
     // we can withdraw to this address later.
-    address payable owner;
+    address payable _owner;
+
+    string public _handle;
 
     // List of all memos received from coffee purchases.
     Memo[] memos;
 
-    constructor() {
+    constructor(string memory __handle, address __owner) {
         // Store the address of the deployer as a payable address.
         // When we withdraw funds, we'll withdraw here.
-        owner = payable(msg.sender);
+        _owner = payable(__owner);
+        _handle = __handle;
+        transferOwnership(__owner);
     }
 
     /**
@@ -50,7 +58,7 @@ contract BuyMeCoffee {
         payable
     {
         // Must accept more than 0 ETH for a coffee.
-        require(msg.value > 0, "can't buy coffee for free!");
+        if (msg.value <= 0) revert InvalidAmount();
 
         // Add the memo to storage!
         memos.push(Memo(msg.sender, block.timestamp, _name, _message));
@@ -62,15 +70,35 @@ contract BuyMeCoffee {
     /**
      * @dev send the entire balance stored in this contract to the owner
      */
-    function withdrawTips() public {
-        require(owner.send(address(this).balance));
+    function withdrawTips() public onlyOwner {
+        _owner.transfer(address(this).balance);
     }
 
     /**
      * @dev check the balance of the owner
      */
-    function checkBalance() public view returns (uint256 balance) {
+    function checkBalance() public view onlyOwner returns (uint256 balance) {
         return address(this).balance;
-        // require(owner.send(address(this).balance));
+    }
+
+    /**
+     * @dev check if the owner
+     */
+    function checkMsgSender() public view onlyOwner returns (address) {
+        return _msgSender();
+    }
+
+    /**
+     * @dev set receive function
+     */
+    receive() external payable {
+        buyCoffee("default anon", "here's a coffee");
+    }
+
+    /**
+     * @dev set fallback function
+     */
+    fallback() external {
+        revert InvaildCall();
     }
 }

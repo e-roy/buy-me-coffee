@@ -7,13 +7,17 @@ import "../styles/globals.css";
 import { chain, createClient, WagmiConfig, configureChains } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import {
   getDefaultWallets,
   RainbowKitProvider,
   Chain,
+  Theme,
+  lightTheme,
 } from "@rainbow-me/rainbowkit";
+import merge from "lodash.merge";
 
 import { IS_ENV_PROD, IS_ENV_DEV } from "@/config";
 
@@ -47,12 +51,18 @@ if (IS_ENV_PROD) {
 }
 
 if (IS_ENV_DEV) {
-  networks.push(chain.polygonMumbai);
+  // networks.push(chain.polygonMumbai);
   networks.push(hardhatChain);
 }
 
 const { chains, provider } = configureChains(networks, [
   (alchemyProvider({ alchemyId }), publicProvider()),
+  jsonRpcProvider({
+    rpc: (chain) => {
+      if (chain.id !== hardhatChain.id) return null;
+      return { http: chain.rpcUrls.default };
+    },
+  }),
 ]);
 
 const { connectors } = getDefaultWallets({
@@ -66,13 +76,19 @@ const wagmiClient = createClient({
   provider,
 });
 
+const customTheme: Theme = merge(lightTheme(), {
+  colors: {
+    accentColor: "#675330",
+  },
+});
+
 const App = ({ Component, pageProps }: AppProps) => {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider coolMode chains={chains}>
+      <RainbowKitProvider coolMode chains={chains} theme={customTheme}>
         <NextHead>
           <title>Buy Me Coffee</title>
         </NextHead>
